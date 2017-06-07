@@ -113,9 +113,13 @@ namespace AutoSync
                 var oldest = backups.First();
                 File.Delete(oldest);
             }
-            // copy new backup
+            // create new backup
             var time = File.GetLastWriteTime(dest);
-            File.Copy(dest, string.Format(BackupFileFormat, backup, time));
+            string target = string.Format(BackupFileFormat, backup, time);
+            // remove if already exists
+            if(File.Exists(target)) File.Delete(target);
+            // move file
+            File.Move(dest, target);
         }
 
         private static void Log(string text, params object[] args)
